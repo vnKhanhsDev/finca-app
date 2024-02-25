@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_app/screens/home_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -10,33 +10,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Test App',
       theme: ThemeData(
         fontFamily: 'OpenSans',
       ),
-      home: MyHomePage(),
+      home: HomeScreen(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Test App'),
-      ),
-      body: Center(
-        child: Text(
-          'Vũ Nam Khánh',
-          style: TextStyle(
-            fontFamily: 'OpenSans',
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
-    );
-  }
-}
