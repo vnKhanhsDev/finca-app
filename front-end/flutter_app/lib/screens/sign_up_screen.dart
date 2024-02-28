@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:flutter_app/screens/sign_in_screen.dart';
 
 class SignUpScreen extends StatefulWidget{
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -122,18 +123,18 @@ class _SignUpScreenState extends State<SignUpScreen>{
                         margin: EdgeInsets.only(top: 12, bottom: 28),
                         child: TextFormField(
                           keyboardType: TextInputType.visiblePassword,
-                          obscureText: _obscured,
+                          obscureText: !_obscured,
                           focusNode: textFieldFocusNode,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 20.0),
                             hintText: 'Password',
                             hintStyle: TextStyle(color: isFocused_p ? Colors.black : Colors.grey,),
-                            filled: true, // Needed for adding a fill color
+                            filled: true,
                             fillColor: Color(0xFFE6ECFB),
-                            isDense: true,  // Reduces height a bit
+                            isDense: true,
                             border: OutlineInputBorder(
-                              borderSide: BorderSide.none,              // No border
-                              borderRadius: BorderRadius.circular(12),  // Apply corner radius
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             prefixIcon: Icon(Icons.lock_rounded,size: 24, color: isFocused_p ? Colors.black : Colors.grey,),
                             suffixIcon: Padding(
@@ -187,9 +188,9 @@ class _SignUpScreenState extends State<SignUpScreen>{
                               right: 0,
                               child: Container(
                                 width: double.infinity,
-                                margin: EdgeInsets.only(top: 10.0), // Điều chỉnh độ cao của kẻ ngang
+                                margin: EdgeInsets.only(top: 10.0),
                                 height: 1.0,
-                                color: Colors.grey, // Màu của kẻ ngang
+                                color: Colors.grey,
                               ),
                             ),
                             Container(
@@ -240,7 +241,9 @@ class _SignUpScreenState extends State<SignUpScreen>{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Bạn đã có tài khoản?', style: TextStyle(color: Colors.grey),),
-                  TextButton(onPressed: (){}, child: Text('Đăng nhập', style: TextStyle(color: Colors.blueAccent),))
+                  TextButton(onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                  }, child: Text('Đăng nhập', style: TextStyle(color: Colors.blueAccent),))
                 ],
               ),
             ),
