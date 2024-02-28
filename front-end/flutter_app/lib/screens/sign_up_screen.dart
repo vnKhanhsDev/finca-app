@@ -207,16 +207,45 @@ class _SignUpScreenState extends State<SignUpScreen>{
                 ),
               ),
               Container(
+                margin: EdgeInsets.only(top: 20, bottom: 20),
                 width: double.infinity,
+                height: 40,
                 child:SignInButton(
                   Buttons.Google,
-                  text: "Sign up with Google",
+                  text: "Tiếp tục với Google",
+                  onPressed: () {},
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 40,
+                child:SignInButton(
+                  Buttons.FacebookNew,
+                  text: "Tiếp tục với Facebook",
                   onPressed: () {},
                 ),
               ),
             ],
           ),
         )
+      ),
+      bottomNavigationBar: Container(
+        height: 50,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Bạn đã có tài khoản?', style: TextStyle(color: Colors.grey),),
+                  TextButton(onPressed: (){}, child: Text('Đăng nhập', style: TextStyle(color: Colors.blueAccent),))
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
