@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class SignUpScreen extends StatefulWidget{
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -207,39 +208,10 @@ class _SignUpScreenState extends State<SignUpScreen>{
               ),
               Container(
                 width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    onPrimary: Colors.black,
-                  ),
-                  onPressed: () {
-
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Image(
-                          image: AssetImage("assets/images/g-logo.png"),
-                          height: 18.0,
-                          width: 24,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 24, right: 8),
-                          child: Text(
-                            'Sign in with Google',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                child:SignInButton(
+                  Buttons.Google,
+                  text: "Sign up with Google",
+                  onPressed: () {},
                 ),
               ),
             ],
