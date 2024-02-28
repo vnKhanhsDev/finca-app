@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/home_screen.dart';
+import 'package:flutter_app/screens/carousel_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'OpenSans',
       ),
-      home: HomeScreen(),
+      home: CarouselScreen(),
     );
   }
 }
