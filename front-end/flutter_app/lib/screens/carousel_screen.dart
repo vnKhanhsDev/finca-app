@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:flutter_app/screens/main_screen.dart';
 import 'package:flutter_app/screens/sign_up_screen.dart';
 import 'package:flutter_app/screens/sign_in_screen.dart';
 class CarouselScreen extends StatefulWidget{
@@ -186,7 +187,7 @@ class _CarouselScreenState extends State<CarouselScreen>{
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                 },
                 child: Text('Đăng nhập', style: TextStyle(color: Colors.white, fontSize: 18),),
               ),

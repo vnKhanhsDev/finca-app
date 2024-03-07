@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_app/screens/sign_up_screen.dart';
 import 'package:flutter_app/screens/home_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class SignInScreen extends StatefulWidget{
   State<SignInScreen> createState() => _SignInScreenState();
@@ -23,7 +25,18 @@ class _SignInScreenState extends State<SignInScreen>{
       textFieldFocusNode.canRequestFocus = false;     // Prevents focus if tap on eye
     });
   }
+  Future signIn() async{
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim()
+    );
+  }
   @override
+  void dispose(){
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
   Widget build(BuildContext context){
     return Scaffold(
       body: SingleChildScrollView(
@@ -159,11 +172,7 @@ class _SignInScreenState extends State<SignInScreen>{
                                 ),
                               ),
                             ),
-                            onPressed: () {
-                              if(emailController.text == "khanhvu@gmail.com" && passwordController.text == "khanhvu1"){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-                              }
-                            },
+                           onPressed: signIn,
                             child: Text('Đăng nhập', style: TextStyle(color: Colors.white, fontSize: 20),),
                           ),
                         ),

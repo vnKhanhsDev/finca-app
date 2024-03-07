@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "741167316123",
+    "project_id": "finca-152a7",
+    "storage_bucket": "finca-152a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741167316123:android:92475fe0771c9105c55a3e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9XBFDTlHxfgXr07z8XvAvmybQhSVFwK8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
