@@ -1,19 +1,32 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_app/screens/main_screen.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_app/screens/sign_in_screen.dart';
+import 'package:date_field/date_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpScreen extends StatefulWidget{
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen>{
-  String _selectedValue = 'individual';
+  String _selectedValue = 'Cá nhân';
+  bool isFocused_n = false;
   bool isFocused_e = false;
   bool isFocused_p = false;
+  bool isFocused_pn = false;
+  bool isFocused_d = false;
   final textFieldFocusNode = FocusNode();
   bool _obscured = false;
-
+  DateTime? selectedDate;
+  final roleController = TextEditingController();
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+  final dateController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   void _toggleObscured() {
     setState(() {
       _obscured = !_obscured;
@@ -22,6 +35,37 @@ class _SignUpScreenState extends State<SignUpScreen>{
     });
   }
   @override
+  void dispose(){
+    roleController.dispose();
+    nameController.dispose();
+    phoneController.dispose();
+    dateController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+  Future signUp() async{
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+    addUser(
+        _selectedValue,
+        nameController.text.trim(),
+        phoneController.text.trim(),
+        selectedDate.toString(),
+        emailController.text.trim()
+    );
+  }
+  Future addUser(String role, String name, String phone, String dob, String email) async{
+    await FirebaseFirestore.instance.collection('users').add({
+      'role': role,
+      'name': name,
+      'phone': phone,
+      'dob': dob,
+      'email': email,
+    });
+  }
   Widget build(BuildContext context){
     return Scaffold(
       body: SingleChildScrollView(
@@ -64,11 +108,12 @@ class _SignUpScreenState extends State<SignUpScreen>{
                     Expanded(
                       child: RadioListTile<String>(
                         title: Text('Cá nhân', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _selectedValue == 'individual' ? Colors.blue : Colors.grey,),),
-                        value: 'individual',
+                        value: 'Cá nhân',
                         groupValue: _selectedValue,
                         onChanged: (value) {
                           setState(() {
                             _selectedValue = value!;
+                            roleController.text = _selectedValue;
                           });
                         },
                         activeColor: Colors.blueAccent,
@@ -77,11 +122,12 @@ class _SignUpScreenState extends State<SignUpScreen>{
                     Expanded(
                       child: RadioListTile<String>(
                         title: Text('Cửa hàng', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _selectedValue == 'shop' ? Colors.blue : Colors.grey,),),
-                        value: 'shop',
+                        value: 'Cửa hàng',
                         groupValue: _selectedValue,
                         onChanged: (value) {
                           setState(() {
                             _selectedValue = value!;
+                            roleController.text = _selectedValue;
                           });
                         },
                         activeColor: Colors.blueAccent,
@@ -98,6 +144,85 @@ class _SignUpScreenState extends State<SignUpScreen>{
                     children: [
                       Container(
                         child: TextFormField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 20.0),
+                            filled: true,
+                            fillColor: Color(0xFFE6ECFB),
+                            prefixIcon: Icon(Icons.person, color: isFocused_n ? Colors.black : Colors.grey,),
+                            hintText: 'Họ và tên',
+                            hintStyle: TextStyle(color: isFocused_n ? Colors.black : Colors.grey,),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: BorderSide.none
+                            ),
+
+                          ),
+                          onTap: () {
+                            setState(() {
+                              isFocused_n = true;
+                            });
+                          },
+                          validator: (val) => val.toString().length < 1 ? 'Hãy điền họ và tên' : null,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 12),
+                        child: TextFormField(
+                          controller: phoneController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 20.0),
+                            filled: true,
+                            fillColor: Color(0xFFE6ECFB),
+                            prefixIcon: Icon(Icons.phone, color: isFocused_pn ? Colors.black : Colors.grey,),
+                            hintText: 'Số điện thoại',
+                            hintStyle: TextStyle(color: isFocused_pn ? Colors.black : Colors.grey,),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: BorderSide.none
+                            ),
+
+                          ),
+                          onTap: () {
+                            setState(() {
+                              isFocused_pn = true;
+                            });
+                          },
+                          validator: (val) => val.toString().length < 1 ? 'Hãy điền số điện thoại' : null,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 12),
+                        child: DateTimeFormField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 20.0),
+                            filled: true,
+                            fillColor: Color(0xFFE6ECFB),
+                            prefixIcon: Icon(Icons.cake, color: isFocused_d ? Colors.black : Colors.grey,),
+                            hintText: 'Ngày sinh',
+                            hintStyle: TextStyle(color: isFocused_d ? Colors.black : Colors.grey,),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: BorderSide.none
+                            ),
+                            suffixIcon: null,
+                          ),
+                          mode: DateTimeFieldPickerMode.date,
+                          onChanged: (DateTime? value) {
+                            selectedDate = value;
+                            dateController.text = selectedDate.toString();
+                          },
+                          onTap: () {
+                            setState(() {
+                              isFocused_d = true;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 12),
+                        child: TextFormField(
+                          controller: emailController,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 20.0),
                             filled: true,
@@ -122,12 +247,13 @@ class _SignUpScreenState extends State<SignUpScreen>{
                       Container(
                         margin: EdgeInsets.only(top: 12, bottom: 28),
                         child: TextFormField(
+                          controller: passwordController,
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: !_obscured,
                           focusNode: textFieldFocusNode,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 20.0),
-                            hintText: 'Password',
+                            hintText: 'Mật khẩu',
                             hintStyle: TextStyle(color: isFocused_p ? Colors.black : Colors.grey,),
                             filled: true,
                             fillColor: Color(0xFFE6ECFB),
@@ -171,8 +297,9 @@ class _SignUpScreenState extends State<SignUpScreen>{
                               ),
                             ),
                           ),
-                          onPressed: () {
-
+                          onPressed:(){
+                            signUp();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                           },
                           child: Text('Đăng ký', style: TextStyle(color: Colors.white, fontSize: 20),),
                         ),
