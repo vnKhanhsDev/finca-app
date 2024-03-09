@@ -3,6 +3,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/read_data/get_user_name.dart';
+import 'package:flutter_app/screens/register_mechanic_screen.dart';
+import 'package:flutter_app/screens/search_screen.dart';
+import 'package:flutter_app/screens/verhicle_screen.dart';
 
 class HomePage extends StatefulWidget{
   State<HomePage> createState() => _HomePageState();
@@ -14,64 +17,78 @@ class _HomePageState extends State<HomePage>{
     'assets/images/home_carousel_2.jpg',
     'assets/images/home_carousel_3.jpg',
   ];
+  List<QueryDocumentSnapshot> data = [];
+  QueryDocumentSnapshot? userData;
   final user = FirebaseAuth.instance.currentUser!;
-  List<String> docId = [];
+  var docId;
   Future getDocId() async{
     await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: user.email).get().then(
-          (snapshot) => snapshot.docs.forEach((element) {
-        docId.add(element.reference.id);
+          (snapshot) => snapshot.docs.forEach((document) {
+        docId = document.reference.id;
       }),
     );
+  }
+  Future getData() async{
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: user.email).get();
+    data.addAll(querySnapshot.docs);
+    userData = querySnapshot.docs.first;
+    setState(() {
+
+    });
+  }
+  @override
+  void initState(){
+    getData();
+    super.initState();
   }
   @override
   Widget build(BuildContext context){
     return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.only(top: 50, bottom:20, left: 20, right: 20),
+        width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.blueAccent[700],
-                      child: Padding(
-                        padding: const EdgeInsets.all(4), // Border radius
-                        child: ClipOval(child: Image.asset('assets/images/avatar_test.png')),
+            Container(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.blueAccent[700],
+                        child: Padding(
+                          padding: const EdgeInsets.all(4), // Border radius
+                          child: ClipOval(child: Image.asset('assets/images/avatar_test.png')),
+                        ),
                       ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 12),
-                          child: Text('Xin chào,'),
-                        ),
-                        Container(
-                          margin:  EdgeInsets.only(left: 12),
-                          child: FutureBuilder(
-                            future: getDocId(),
-                            builder: (context, snapshot){
-                              return GetUserName(documentId: docId[0]);
-                            },
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 12),
+                            child: Text('Xin chào,'),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Card(
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: Badge(label: Text('2'), child: Icon(Icons.message_rounded, color: Colors.white,)),
+                          Container(
+                            margin:  EdgeInsets.only(left: 12),
+                            child: Text('${userData?['name']}'),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  color: Colors.blueAccent[700],
-                ),
-              ],
+                  Card(
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      child: Badge(label: Text('2'), child: Icon(Icons.message_rounded, color: Colors.white,)),
+                    ),
+                    color: Colors.blueAccent[700],
+                  ),
+                ],
+              ),
             ),
             Container(
               margin: EdgeInsets.only(top: 30, bottom: 8),
@@ -117,7 +134,7 @@ class _HomePageState extends State<HomePage>{
                 children: [
                   Expanded(child:InkWell(
                     onTap: (){
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen()));
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(
@@ -207,7 +224,7 @@ class _HomePageState extends State<HomePage>{
                 children: [
                   Expanded(child: InkWell(
                     onTap: (){
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => VerhicleScreen()));
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(
@@ -234,7 +251,7 @@ class _HomePageState extends State<HomePage>{
                   ),),
                   Expanded(child: InkWell(
                     onTap: (){
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterMechanicScreen()));
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(
