@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/home_screen.dart';
 import 'package:flutter_app/screens/carousel_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_app/screens/map_screen.dart';
 import 'firebase_options.dart';
 
 void main() async{
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'OpenSans',
       ),
-      home: CarouselScreen(),
+      home: MapScreen(),
     );
   }
 }
