@@ -28,11 +28,12 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(':app')
 }
+final def task = task wrapper(type: Wrapper) {
+    gradleVersion = '8.6'
+}
+task
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
-}
-task wrapper(type: Wrapper) {
-    gradleVersion = '8.6'
 }
 
 

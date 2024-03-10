@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/map_screen.dart';
 
 class SearchScreen extends StatefulWidget{
   State<SearchScreen> createState() => _SearchScreenState();
@@ -307,7 +308,7 @@ class _SearchScreenState extends State<SearchScreen>{
             ),
           ),
           onPressed: () {
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen()));
           },
           child: Text('Tìm kiếm', style: TextStyle(color: Colors.blueAccent, fontSize: 18),),
         ),
