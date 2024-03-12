@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterMechanicScreen extends StatefulWidget{
   State<RegisterMechanicScreen> createState() => _RegisterMechanicScreenState();
 }
 
 class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
+  final addressController = TextEditingController();
+  List<String> service = [];
+
   String selectedTimeStart = '00:00';
   String selectedTimeEnd = '00:00';
   String expValue = '1 năm';
@@ -14,6 +19,46 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
   bool maintenanceChecked = false;
   bool beautyChecked = false;
   bool emergencyChecked = false;
+
+  final user = FirebaseAuth.instance.currentUser!;
+  QueryDocumentSnapshot? userData;
+
+  Future registerMechanic() async{
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: user.email).get();
+    userData = querySnapshot.docs.first;
+    
+    addMechanic(
+        user.email.toString(),
+        userData?['name'],
+        userData?['phone'],
+        addressController.text.trim(),
+        selectedTimeStart,
+        selectedTimeEnd,
+        expValue,
+        vehicleValue,
+        service
+    );
+
+  }
+
+  Future addMechanic(String email, String name, String phone, String address, String sTime, String eTime, String exp, String vehicle, List<String> service) async{
+      await FirebaseFirestore.instance.collection('machanics').add({
+        'email' : email,
+        'name' : name,
+        'phone' : phone,
+        'address' : address,
+        'sTime' : sTime,
+        'eTime' : eTime,
+        'exp' : exp,
+        'vehicle' : vehicle,
+        'service' : service,
+      });
+  }
+  @override
+  void dispose(){
+    addressController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -54,6 +99,7 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
                 child: Container(
                   margin: EdgeInsets.only(top: 8, bottom: 12),
                   child: TextFormField(
+                    controller: addressController,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(20.0),
                       filled: true,
@@ -88,7 +134,10 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
                             selectedTimeStart = newValue!;
                           });
                         },
-                        items: <String>['00:00', '01:00', '02:00', '03:00']
+                        items: <String>['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00',
+                          '07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
+                          '13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
+                          '19:00', '20:00', '21:00', '22:00', '23:00']
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -110,7 +159,10 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
                           selectedTimeEnd = newValue!;
                         });
                       },
-                      items: <String>['00:00', '01:00', '02:00', '03:00']
+                      items: <String>['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00',
+                        '07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
+                        '13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
+                        '19:00', '20:00', '21:00', '22:00', '23:00']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -201,6 +253,14 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
                       onChanged: (bool? value){
                         setState(() {
                           repairChecked = value!;
+                          if(repairChecked == true){
+                            service.add('Sửa chữa');
+                          }else{
+                            int index = service.indexOf('Sửa chữa');
+                            if (index != -1) {
+                              service.remove('Sửa chữa');
+                            }
+                          }
                         });
                       },
                       contentPadding: EdgeInsets.all(0),
@@ -215,6 +275,14 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
                       onChanged: (bool? value){
                         setState(() {
                           maintenanceChecked = value!;
+                          if(maintenanceChecked == true){
+                            service.add('Bảo dưỡng');
+                          }else{
+                            int index = service.indexOf('Bảo dưỡng');
+                            if (index != -1) {
+                              service.remove('Bảo dưỡng');
+                            }
+                          }
                         });
                       },
                       contentPadding: EdgeInsets.all(0),
@@ -229,6 +297,14 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
                       onChanged: (bool? value){
                         setState(() {
                           beautyChecked = value!;
+                          if(beautyChecked == true){
+                            service.add('Làm đẹp');
+                          }else{
+                            int index = service.indexOf('Làm đẹp');
+                            if (index != -1) {
+                              service.remove('Làm đẹp');
+                            }
+                          }
                         });
                       },
                       contentPadding: EdgeInsets.all(0),
@@ -247,6 +323,14 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
                       onChanged: (bool? value){
                         setState(() {
                           emergencyChecked = value!;
+                          if(emergencyChecked == true){
+                            service.add('Khẩn cấp');
+                          }else{
+                            int index = service.indexOf('Khẩn cấp');
+                            if (index != -1) {
+                              service.remove('Khẩn cấp');
+                            }
+                          }
                         });
                       },
                       contentPadding: EdgeInsets.all(0),
@@ -281,7 +365,27 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
             ),
           ),
           onPressed: () {
-            
+            registerMechanic();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Đăng ký thành công'),
+                  content: Text('Thông tin của bạn đã được đăng ký thành công.'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        // Đóng hộp thoại
+                        Navigator.of(context).pop();
+                        // Điều hướng về trang chủ
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK', style: TextStyle(color: Colors.blueAccent),),
+                    ),
+                  ],
+                );
+              },
+            );
           },
           child: Text('Đăng ký', style: TextStyle(color: Colors.white, fontSize: 18),),
         ),

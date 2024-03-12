@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/read_data/get_user_name.dart';
+import 'package:flutter_app/screens/post_screen.dart';
 import 'package:flutter_app/screens/register_mechanic_screen.dart';
 import 'package:flutter_app/screens/search_screen.dart';
 import 'package:flutter_app/screens/verhicle_screen.dart';
@@ -162,7 +163,7 @@ class _HomePageState extends State<HomePage>{
                   ),
                   Expanded(child: InkWell(
                     onTap: (){
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PostScreen()));
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(

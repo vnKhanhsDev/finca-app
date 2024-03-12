@@ -97,9 +97,14 @@ class _MapScreenState extends State<MapScreen>{
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 8),
-                    child: Text('Bản đồ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+                    child: Text('Kết quả tìm kiếm', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
                   )
                 ],
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                width: double.infinity,
+                child: Text('Chọn vị chí để hiển thị thông tin cửa hàng', style: TextStyle(fontSize: 14, color: Colors.grey),),
               ),
               Container(
                 width: double.infinity,
@@ -422,6 +427,7 @@ class _MapScreenState extends State<MapScreen>{
                                         child: Column(
                                           children: [
                                             Container(
+
                                               child: Text('${data[4]['name']}', style: TextStyle(fontSize: 20, color: Colors.blueAccent),),
                                             ),
                                             Container(

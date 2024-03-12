@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/info_user_screen.dart';
 
 class Setting extends StatefulWidget{
   State<Setting> createState() => _SettingState();
@@ -29,7 +30,7 @@ class _SettingState extends State<Setting>{
               width: double.infinity,
               child: InkWell(
                 onTap: (){
-                  
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => InfoUserScreen()));
                 },
                 child: Card(
                   shape: RoundedRectangleBorder(

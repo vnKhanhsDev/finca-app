@@ -13,6 +13,7 @@ class SignUpScreen extends StatefulWidget{
 
 class _SignUpScreenState extends State<SignUpScreen>{
   String _selectedValue = 'Cá nhân';
+  String _genderValue = 'Nam';
   bool isFocused_n = false;
   bool isFocused_e = false;
   bool isFocused_p = false;
@@ -30,8 +31,8 @@ class _SignUpScreenState extends State<SignUpScreen>{
   void _toggleObscured() {
     setState(() {
       _obscured = !_obscured;
-      if (textFieldFocusNode.hasPrimaryFocus) return; // If focus is on text field, dont unfocus
-      textFieldFocusNode.canRequestFocus = false;     // Prevents focus if tap on eye
+      if (textFieldFocusNode.hasPrimaryFocus) return;
+      textFieldFocusNode.canRequestFocus = false;
     });
   }
   @override
@@ -52,15 +53,17 @@ class _SignUpScreenState extends State<SignUpScreen>{
     addUser(
         _selectedValue,
         nameController.text.trim(),
+        _genderValue,
         phoneController.text.trim(),
         selectedDate.toString(),
         emailController.text.trim()
     );
   }
-  Future addUser(String role, String name, String phone, String dob, String email) async{
+  Future addUser(String role, String name, String gender,String phone, String dob, String email) async{
     await FirebaseFirestore.instance.collection('users').add({
       'role': role,
       'name': name,
+      'gender': gender,
       'phone': phone,
       'dob': dob,
       'email': email,
@@ -107,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen>{
                   children: <Widget>[
                     Expanded(
                       child: RadioListTile<String>(
-                        title: Text('Cá nhân', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _selectedValue == 'individual' ? Colors.blue : Colors.grey,),),
+                        title: Text('Cá nhân', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _selectedValue == 'Cá nhân' ? Colors.blue : Colors.grey,),),
                         value: 'Cá nhân',
                         groupValue: _selectedValue,
                         onChanged: (value) {
@@ -121,7 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen>{
                     ),
                     Expanded(
                       child: RadioListTile<String>(
-                        title: Text('Cửa hàng', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _selectedValue == 'shop' ? Colors.blue : Colors.grey,),),
+                        title: Text('Cửa hàng', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _selectedValue == 'Cửa hàng' ? Colors.blue : Colors.grey,),),
                         value: 'Cửa hàng',
                         groupValue: _selectedValue,
                         onChanged: (value) {
@@ -164,6 +167,41 @@ class _SignUpScreenState extends State<SignUpScreen>{
                             });
                           },
                           validator: (val) => val.toString().length < 1 ? 'Hãy điền họ và tên' : null,
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Expanded(child: Container(
+                              child: Text('Giơ tính:', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+                            )),
+                            Expanded(
+                              child: RadioListTile<String>(
+                                title: Text('Nam', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _genderValue == 'Nam' ? Colors.blue : Colors.grey,),),
+                                value: 'Nam',
+                                groupValue: _genderValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _genderValue = value!;
+                                  });
+                                },
+                                activeColor: Colors.blueAccent,
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile<String>(
+                                title: Text('Nữ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _genderValue == 'Nữ' ? Colors.blue : Colors.grey,),),
+                                value: 'Nữ',
+                                groupValue: _genderValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _genderValue = value!;
+                                  });
+                                },
+                                activeColor: Colors.blueAccent,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Container(
@@ -299,7 +337,26 @@ class _SignUpScreenState extends State<SignUpScreen>{
                           ),
                           onPressed:(){
                             signUp();
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Đăng ký thành công'),
+                                  content: Text('Tài khoản của bạn đã được đăng ký thành công.'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        // Đóng hộp thoại
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                        // Điều hướng về trang chủ
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                      },
+                                      child: Text('OK', style: TextStyle(color: Colors.blueAccent),),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           },
                           child: Text('Đăng ký', style: TextStyle(color: Colors.white, fontSize: 20),),
                         ),
