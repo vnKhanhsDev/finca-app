@@ -366,6 +366,9 @@ class _RegisterMechanicScreenState extends State<RegisterMechanicScreen>{
           ),
           onPressed: () {
             registerMechanic();
+            setState(() {
+
+            });
             showDialog(
               context: context,
               builder: (BuildContext context) {

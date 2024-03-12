@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/map_mechanic_screen.dart';
 import 'package:flutter_app/screens/map_screen.dart';
 
 class SearchScreen extends StatefulWidget{
@@ -15,6 +16,8 @@ class _SearchScreenState extends State<SearchScreen>{
   bool shopChecked = false;
 
   String locationValue = 'Hiện tại';
+
+  String searchValue = 'Thợ sửa';
 
   bool carChecked = false;
   bool eCarChecked =false;
@@ -148,33 +151,34 @@ class _SearchScreenState extends State<SearchScreen>{
                 child: Text('Dối tượng', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               ),
               Row(
-                children: [
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
                   Expanded(
-                    child: CheckboxListTile(
-                      title: Text('Thợ sửa chữa', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.normal),),
-                      value: mechanicChecked,
-                      onChanged: (bool? value){
+                    child: RadioListTile<String>(
+                      title: Text('Thợ sửa xe', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.grey,),),
+                      value: 'Thợ sửa',
+                      groupValue: searchValue,
+                      onChanged: (value) {
                         setState(() {
-                          mechanicChecked = value!;
+                          searchValue = value!;
                         });
                       },
                       contentPadding: EdgeInsets.all(0),
                       activeColor: Colors.blueAccent,
-                      controlAffinity: ListTileControlAffinity.leading,
                     ),
                   ),
                   Expanded(
-                    child: CheckboxListTile(
-                      title: Text('Cửa hàng sửa chữa', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.normal),),
-                      value: shopChecked,
-                      onChanged: (bool? value){
+                    child: RadioListTile<String>(
+                      title: Text('Của hàng ửa xe', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.grey,),),
+                      value: 'Cửa hàng sửa xe',
+                      groupValue: searchValue,
+                      onChanged: (value) {
                         setState(() {
-                          shopChecked = value!;
+                          searchValue = value!;
                         });
                       },
                       contentPadding: EdgeInsets.all(0),
                       activeColor: Colors.blueAccent,
-                      controlAffinity: ListTileControlAffinity.leading,
                     ),
                   ),
                 ],
@@ -308,7 +312,11 @@ class _SearchScreenState extends State<SearchScreen>{
             ),
           ),
           onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen()));
+              if(searchValue =='Thợ sửa'){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MapMechanicScreen()));
+              }else{
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen()));
+              }
           },
           child: Text('Tìm kiếm', style: TextStyle(color: Colors.blueAccent, fontSize: 18),),
         ),
